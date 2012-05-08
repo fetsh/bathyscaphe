@@ -30,7 +30,10 @@ module Bathyscaphe
       # Parse command line
       begin
         optparser.parse!
-        unless ARGV.empty?
+        if ARGV.empty?
+          puts optparser
+          exit
+        else
           tv_show = ARGV[0]
         end
       rescue OptionParser::ParseError => e
