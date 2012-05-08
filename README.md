@@ -11,8 +11,7 @@ Be aware: there is a limit of 30 subs per day set by addic7ed.com.
 
     $ git clone git://github.com/ilzoff/bathyscaphe.git
     $ cd bathyscaphe
-    $ gem install bones
-    $ rake gem:install
+    $ rake install
 
 ### USAGE
 
@@ -24,8 +23,9 @@ Be aware: there is a limit of 30 subs per day set by addic7ed.com.
 
 ### TODO
 
-  1 Test regexp for matching more tv-show names
+  1. Test regexp for matching more tv-show names
+  2. Maybe add other sources
 
 ### Authors
 
-  - Ilia Zemskov (nbspace.ru) ilzoff@gmail.com
+  - Ilia Zemskov (http://nbspace.ru) ilzoff@gmail.com
