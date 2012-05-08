@@ -15,6 +15,10 @@ Be aware: there is a limit of 30 subs per day set by addic7ed.com.
     $ cd bathyscaphe
     $ rake install
 
+or just 
+
+    $ gem install bathyscaphe
+
 ### USAGE
 
     $ bathyscaphe [OPTIONS] TV_SHOW
