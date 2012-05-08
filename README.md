@@ -7,21 +7,25 @@ Existing solutions such as [Periscope](http://code.google.com/p/periscope/) and 
 
 Be aware: there is a limit of 30 subs per day set by addic7ed.com. 
 
-## INSTALL
+### INSTALL
 
     $ git clone https://ilzoff@github.com/ilzoff/bathyscaphe.git
     $ cd bathyscaphe
     $ gem install bones
     $ rake gem:install
 
-## USAGE
+### USAGE
 
     $ bathyscaphe [OPTIONS] TV_SHOW
 
-### Options
+#### Options
     -d, --dry-run                    Parse filename but do not download anything
     -h, --help                       Show usage
 
-## TODO
+### TODO
 
   1 Test regexp for matching more tv-show names
+
+### Authors
+
+  - Ilia Zemskov (nbspace.ru) ilzoff@gmail.com
