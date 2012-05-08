@@ -29,4 +29,4 @@ exit if Bathyscaphe::Config::OPTIONS[:dry_run]
 
 sub = Bathyscaphe::Addic7ed.new(tv_show.name, tv_show.season, tv_show.episode)
 
-sub.save(file_dir + File.basename(file_name, ".*") + ".srt")
+sub.save(file_dir + "/" + File.basename(file_name, ".*") + ".srt")
