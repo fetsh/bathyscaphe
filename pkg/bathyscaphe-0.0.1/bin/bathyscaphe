@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib bathyscaphe]))
+
+file_arg = Bathyscaphe::Config.parse_options
+
+unless File.exist? File.expand_path(file_arg)
+  puts "There's no such file: " + File.expand_path(file_arg)
+  exit 0
+end
+
+file_name = File.basename(file_arg)
+file_dir = File.expand_path(File.dirname(file_arg))
+
+
+begin
+  tv_show = Bathyscaphe::TVDB.new(file_name)
+  
+  puts "TV Show:    #{tv_show.name}"
+  puts "Season:     #{tv_show.season}"
+  puts "Episode:    #{tv_show.episode}"
+  
+rescue Exception => e
+  puts e
+  exit 0
+end
+
+exit if Bathyscaphe::Config::OPTIONS[:dry_run]
+
+sub = Bathyscaphe::Addic7ed.new(tv_show.name, tv_show.season, tv_show.episode)
+
+sub.save(file_dir + File.basename(file_name, ".*") + ".srt")
