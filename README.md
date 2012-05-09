@@ -7,7 +7,9 @@ Subtitles are searched based on tv-show file name. Only english subtitles with h
 
 Existing solutions such as [Periscope](http://code.google.com/p/periscope/) and [Submarine](https://github.com/blazt/submarine) are more powerfull then bathyscaphe, they're using file hashes to search subtitles with API-powered services (Podnapisi, Opensubtitles, etc). And frankly, I use periscope myself most of the time. But they don't work for recently released episodes of tv-shows. And having to go to addic7ed.com every time new episode comes out is a pain in the butt. So *bathyscaphe* to the rescue.
 
-Be aware: there is a limit of 30 subs per day set by addic7ed.com. 
+Be aware: there is a limit of 30 subs per day set by addic7ed.com.
+
+Tell me if your show wasn't recognized by bathyscaphe. Or change Bathyscaphe::TVDB and make pull request.
 
 ### INSTALL
 
@@ -35,3 +37,11 @@ or just
 ### Authors
 
   - Ilia Zemskov (http://nbspace.ru) ilzoff@gmail.com
+
+### License
+
+I don't care.
+
+Copyright © 2012 Ilia Zemskov
+
+MIT License. See LICENSE

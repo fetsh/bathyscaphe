@@ -11,6 +11,8 @@ Gem::Specification.new do |s|
   s.summary     = %q{Simple gem to download subtitles from addic7ed.com}
   s.description = %q{Simple gem to download subtitles for tv-show episodes from addic7ed.com. Subtitles are searched based on file name.}
 
+  s.license     = 'MIT'
+
   s.rubyforge_project = "bathyscaphe"
 
   s.files         = `git ls-files`.split("\n")
