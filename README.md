@@ -29,12 +29,6 @@ or just
     -d, --dry-run                    Parse filename but do not download anything
     -h, --help                       Show usage
 
-### TODO
-
-  1. Test regexp for matching more tv-show names
-  2. Write some tests
-  3. Maybe add other sources
-
 ### Changelog
 
 #### 0.1.3
@@ -45,10 +39,16 @@ or just
 - LICENCE defined
 
 #### 0.1.1
-Readme chenged =)
+- Readme changed =)
 
 #### 0.1.0
-Initial release
+- Initial release
+
+### TODO
+
+  1. Test regexp for matching more tv-show names
+  2. Write some tests
+  3. Maybe add other sources
 
 ### Authors
 
