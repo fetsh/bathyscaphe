@@ -32,7 +32,23 @@ or just
 ### TODO
 
   1. Test regexp for matching more tv-show names
-  2. Maybe add other sources
+  2. Write some tests
+  3. Maybe add other sources
+
+### Changelog
+
+#### 0.1.3
+- RDoc + Refactoring
+
+#### 0.1.2
+- Some new exceptions handling
+- LICENCE defined
+
+#### 0.1.1
+Readme chenged =)
+
+#### 0.1.0
+Initial release
 
 ### Authors
 

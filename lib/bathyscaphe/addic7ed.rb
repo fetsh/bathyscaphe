@@ -6,6 +6,13 @@ module Bathyscaphe
   require "tempfile"
   require "fileutils"
 
+  # Class to interact with http://addic7ed.com
+  # 
+  # === Exaple:
+  #
+  #  sub = Bathyscaphe::Addic7ed.new(tv_show, season, episode)
+  #  sub.save("path/to/save/subtitles")
+  #
   class Addic7ed
 
     HTTP_HOST = "http://addic7ed.com"
@@ -18,13 +25,17 @@ module Bathyscaphe
       @temp_file = download
     end
 
+    # Fakes your identity as if you came directly from episode page (otherwise addic7ed will redirect you to this episode page) and downloads subtitles.
+    # 
+    # Returns object of TempFile with subtitles.
+    #
     def download
 
-      uri = URI(HTTP_HOST + sub_link)
+      uri = URI( download_link )
       path = uri.path.empty? ? "/" : uri.path
 
       headers = { "Host" => HOST,
-                  "Referer" => show_page(:referer)
+                  "Referer" => episode_link(:referer)
                 }
       @temp_file = Tempfile.open("bathyscaphe_"+@tv_show+@season+@episode)
       begin
@@ -38,37 +49,39 @@ module Bathyscaphe
       ensure
         @temp_file.close
       end
+
       @temp_file
+
     end
 
+
+    # Moves downloaded subtitles to local_path
+    #
     def save local_path
       @temp_file ||= download
       FileUtils.mv(@temp_file.path, local_path)
+      puts "\e[32m"+"We've downloaded them: #{local_path}"+"\e[0m"
     end
 
-    def sub_link
-      begin
-        io_html = open(show_page(:lang))
-        html = Nokogiri::HTML(io_html)
-      rescue URI::InvalidURIError => e
-        # STDERR.puts e
-        puts "We think we didn't parse your TV-Show's name right (#{@tv_show}). Correct us:"
-        name = STDIN.gets
-        @tv_show = name.strip
-        retry
-      end
-      if io_html.status[0] == "200" && html.text.empty?
-        puts "We beliewe addic7ed don't have subtitles for your episode. Check yourself:"
-        puts "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
+
+    # Returns direct link to most updated subtitles with highest downloads counter
+    #
+    def download_link
+
+      html = Nokogiri::HTML( get_html )
+
+      if html.text.empty?
+        puts "\e[31m"+"We beliewe addic7ed don't have subtitles for your episode."+"\e[0m"
+        puts "   Go check yourself:"
+        puts "   #{search_link}"
         exit
       end
 
-      search_result = html.xpath("//form[@action='/search.php']").children.xpath("./b")
-      if search_result.any?
+      if (search_result = html.xpath("//form[@action='/search.php']").children.xpath("./b")).any?
         if results = search_result.first.text.match(/(\d*) result.{0,1} found/)
-          puts "Suddenly our bathyscaphe crashed into 'Search results page'"
-          puts "They've found #{results[1]} results. Go check yourself:"
-          puts "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
+          puts "\e[31m"+"Suddenly our bathyscaphe crashed into 'Search results page'"+"\e[0m"
+          puts "   They've found #{results[1]} results matching your tv-show name. Go check yourself:"
+          puts "   #{search_link}"
           exit
         end
       end
@@ -88,27 +101,56 @@ module Bathyscaphe
           end
         end
       end
-
-      subtitles = subtitles.sort
+     
       if subtitles.empty?
-        puts "We didn't find your subtitles for some reason."
-        puts "Try to find them manually:"
-        puts "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
-        puts show_page(:lang)
+        puts "\e[31m"+"We didn't find your subtitles for some reason."+"\e[0m"
+        puts "   Try to find them manually:"
+        puts "   #{search_link}"
         exit
       end
-      puts "Found subtitles with #{subtitles.last[0]} downloads: http://www.addic7ed.com#{subtitles.last[1]}"
-      subtitles.last[1]
+
+      subtitles = subtitles.sort
+      puts "\e[32m"+"Found subtitles with #{subtitles.last[0]} downloads: #{HTTP_HOST + subtitles.last[1]}"+"\e[0m"
+      
+      return HTTP_HOST + subtitles.last[1]
     end
 
-    def show_page(type)
-      link = URI::escape("http://www.addic7ed.com/serie/#{@tv_show}/#{@season}/#{@episode}/")
+    # Returns Tempfile with html regarding your episode
+    #
+    def get_html
+      io_html = open(episode_link(:lang))
+    rescue URI::InvalidURIError => e
+      STDERR.puts "\e[31m"+"We generated url the wrong way. Shame on us."+"\e[0m"
+      STDERR.puts e
+      exit
+    rescue OpenURI::HTTPError => the_error
+      STDERR.puts "\e[31m"+"Server responded with funny status code #{the_error.io.status[0]}. Haven't seen it yet."+"\e[0m"
+      exit
+    end
+
+    # Returns properly generated link to the episode page.
+    # 
+    # === Params
+    # Takes symbol as an argument:
+    # *:referer* returns link for download method to fake identity.
+    # *:lang* returns link with english subtitles for defined episode.
+    #
+    def episode_link(type = :lang)
+      link = URI::escape("http://www.addic7ed.com/serie/#{@tv_show.gsub(" ", "_")}/#{@season}/#{@episode}/")
       link += case type
       when :referer
         "addic7ed"
       when :lang
         "1"
+      else
+        "1"
       end
+    end
+
+    # Returns link to search results for your tv-show name
+    # 
+    def search_link
+      "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
     end
 
   end

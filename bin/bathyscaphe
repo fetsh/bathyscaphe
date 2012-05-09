@@ -15,15 +15,16 @@ file_dir = File.expand_path(File.dirname(file_arg))
 
 begin
   tv_show = Bathyscaphe::TVDB.new(file_name)
-  
-  puts "TV Show:    #{tv_show.name}"
-  puts "Season:     #{tv_show.season}"
-  puts "Episode:    #{tv_show.episode}"
-  
 rescue Exception => e
-  puts e
-  exit 0
+  puts "\e[31m"+e+". Shame on us. \e[0m"
+  exit
 end
+
+puts "\e[32m"+"--------"+"\e[0m"
+puts "\e[32m"+"TV Show:    #{tv_show.name}"+"\e[0m"
+puts "\e[32m"+"Season:     #{tv_show.season}"+"\e[0m"
+puts "\e[32m"+"Episode:    #{tv_show.episode}"+"\e[0m"
+puts "\e[32m"+"--------"+"\e[0m"
 
 exit if Bathyscaphe::Config::OPTIONS[:dry_run]
 
