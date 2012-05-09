@@ -47,7 +47,32 @@ module Bathyscaphe
     end
 
     def sub_link
-      html = Nokogiri::HTML(open(show_page(:lang)))
+      begin
+        io_html = open(show_page(:lang))
+        html = Nokogiri::HTML(io_html)
+      rescue URI::InvalidURIError => e
+        # STDERR.puts e
+        puts "We think we didn't parse your TV-Show's name right (#{@tv_show}). Correct us:"
+        name = STDIN.gets
+        @tv_show = name.strip
+        retry
+      end
+      if io_html.status[0] == "200" && html.text.empty?
+        puts "We beliewe addic7ed don't have subtitles for your episode. Check yourself:"
+        puts "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
+        exit
+      end
+
+      search_result = html.xpath("//form[@action='/search.php']").children.xpath("./b")
+      if search_result.any?
+        if results = search_result.first.text.match(/(\d*) result.{0,1} found/)
+          puts "Suddenly our bathyscaphe crashed into 'Search results page'"
+          puts "They've found #{results[1]} results. Go check yourself:"
+          puts "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
+          exit
+        end
+      end
+
       subtitles = {}
       html.css(".tabel95 .newsDate").each do |td|
         if downloads = td.text.match(/\s(\d*)\sDownloads/i)
@@ -65,6 +90,13 @@ module Bathyscaphe
       end
 
       subtitles = subtitles.sort
+      if subtitles.empty?
+        puts "We didn't find your subtitles for some reason."
+        puts "Try to find them manually:"
+        puts "http://www.addic7ed.com/search.php?search=#{URI::escape(@tv_show)}"
+        puts show_page(:lang)
+        exit
+      end
       puts "Found subtitles with #{subtitles.last[0]} downloads: http://www.addic7ed.com#{subtitles.last[1]}"
       subtitles.last[1]
     end
