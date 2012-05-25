@@ -31,6 +31,9 @@ or just
 
 ### Changelog
 
+#### 0.1.4
+- Ability to get season, name and episode based on folder, so we can parse something like this «Grey's anatomy - Season 1 Full - ENG/01-A hard day's night.srt»
+
 #### 0.1.3
 - RDoc + Refactoring
 
