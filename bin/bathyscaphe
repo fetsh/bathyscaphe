@@ -14,9 +14,9 @@ file_dir = File.expand_path(File.dirname(file_arg))
 
 
 begin
-  tv_show = Bathyscaphe::TVDB.new(file_name)
+  tv_show = Bathyscaphe::TVDB.new(file_name, file_dir)
 rescue Exception => e
-  puts "\e[31m"+e+". Shame on us. \e[0m"
+  puts "\e[31m"+e.to_s+". Shame on us. \e[0m"
   exit
 end
 

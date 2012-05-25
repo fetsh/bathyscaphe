@@ -6,13 +6,21 @@ module Bathyscaphe
 
     attr_accessor :name, :season, :episode
 
-    def initialize filename
+    def initialize filename, filedir
       if md = filename.match(TVREGEXP1) || md = filename.match(TVREGEXP2)
         @name = md[1].gsub(".", " ").strip
         @name = "Castle" if @name =~ /Castle 2009/i
         @name = "Missing (2012)" if @name =~ /Missing 2012/i
         @season = md[2].to_i.to_s
         @episode = md[3].to_i.to_s
+      elsif md = filedir.split("/").last.match(/(.*)Season(.*)/i)  
+        @name = md[1].gsub(/[-.]+/i, ' ').gsub("'", '').strip
+        @season = md[2].strip.scan(/^(\d+).*/).flatten.last.to_i.to_s
+        if namemd = filename.match(/(\d*).*/)
+          @episode = namemd[1].to_i.to_s
+        else
+          raise("Cant't parse filename")  
+        end
       else
         raise("Cant't parse filename")
       end

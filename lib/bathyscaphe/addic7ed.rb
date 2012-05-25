@@ -122,9 +122,11 @@ module Bathyscaphe
     rescue URI::InvalidURIError => e
       STDERR.puts "\e[31m"+"We generated url the wrong way. Shame on us."+"\e[0m"
       STDERR.puts e
+      STDERR.puts episode_link(:lang)
       exit
     rescue OpenURI::HTTPError => the_error
       STDERR.puts "\e[31m"+"Server responded with funny status code #{the_error.io.status[0]}. Haven't seen it yet."+"\e[0m"
+      STDERR.puts episode_link(:lang)
       exit
     end
 
