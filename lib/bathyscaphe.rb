@@ -9,3 +9,9 @@ module Bathyscaphe
 end
 
 Bathyscaphe.require_all_libs_relative_to(__FILE__)
+
+class Object
+  def blank?
+    respond_to?(:empty?) ? empty? : !self
+  end
+end
