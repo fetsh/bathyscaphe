@@ -1,6 +1,7 @@
 module Bathyscaphe
   require "nokogiri"
   require "open-uri"
+  require "eat"
   require 'net/http'
   require "uri"
   require "tempfile"
@@ -118,10 +119,14 @@ module Bathyscaphe
     # Returns Tempfile with html regarding your episode
     #
     def get_html
-      io_html = open(episode_link(:lang))
+      io_html = eat(episode_link(:lang))
     rescue URI::InvalidURIError => e
       STDERR.puts "\e[31m"+"We generated url the wrong way. Shame on us."+"\e[0m"
       STDERR.puts e
+      STDERR.puts episode_link(:lang)
+      exit
+    rescue HTTPClient::BadResponseError => the_error
+      STDERR.puts "\e[31m"+the_error+". Haven't seen it yet."+"\e[0m"
       STDERR.puts episode_link(:lang)
       exit
     rescue OpenURI::HTTPError => the_error

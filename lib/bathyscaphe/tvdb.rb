@@ -39,6 +39,7 @@ module Bathyscaphe
       name = md[1].gsub(/[-.]+/i, " ").strip
       name = "Castle" if name =~ /Castle 2009/i
       name = "Missing (2012)" if name =~ /Missing 2012/i
+      name = "Brooklyn Nine-Nine" if name =~ /Brooklyn Nine Nine/i
       season = md[2].to_i.to_s
       episode = md[3].to_i.to_s
       return name, season, episode
