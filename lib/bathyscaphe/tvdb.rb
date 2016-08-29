@@ -27,14 +27,14 @@ module Bathyscaphe
         @name, @season, @episode = get_from_md(md)
       end
       return unless [@name, @season, @episode].any?(&:blank?)
-
-      if md = filedir.split("/").last.match(/(.*)Season(.*)/i)  
+      if md = (filedir.split("/").last || filedir).match(/(.*)Season(.*)/i)  
         @name = md[1].gsub(/[-.]+/i, ' ').gsub("'", '').strip
         @season = md[2].strip.scan(/^(\d+).*/).flatten.last.to_i.to_s
         if namemd = filename.match(/(\d*).*/)
           @episode = namemd[1].to_i.to_s
         end
       end
+      fail(Bathyscaphe::Exceptions::NameParsing) if [@name, @season, @episode].any?(&:blank?)
     end
 
     private

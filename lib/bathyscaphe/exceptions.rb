@@ -20,5 +20,10 @@ module Bathyscaphe
         "We didn't find your subtitles for some reason"
       end
     end
+    class NameParsing < StandardError
+      def message
+        'We could not parse your title'
+      end
+    end
   end
 end
