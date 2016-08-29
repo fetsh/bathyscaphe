@@ -35,7 +35,7 @@ module Bathyscaphe
     # Returns object of TempFile with subtitles.
     #
     def download
-      filename = 'bathyscaphe_' + @tv_show + @season + @episode
+      filename = ['bathyscaphe_' + @tv_show + @season + @episode, '.srt']
       @temp_file = Tempfile.open(filename) do |f|
         f.write(subtitles_content)
         f
