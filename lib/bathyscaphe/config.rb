@@ -1,23 +1,8 @@
 require "optparse"
-require 'yaml'
-
-
-CONFIG_FILENAME  = File.expand_path("~/.config/bathyscaphe/bathyscaphe.conf")
-
-CONFIG_DEFAULTS = {
-  :consumer_key => "",
-  :consumer_secret => "",
-  :oauth_token => "",
-  :oauth_token_secret => "",
-  :username => ""
-}
 
 module Bathyscaphe
   class Config
-
-    OPTIONS = {
-      :dry_run => false
-    }
+    OPTIONS = { dry_run: false }
 
     def self.parse_options
       options = {}
@@ -49,62 +34,6 @@ module Bathyscaphe
         puts optparser
         exit
       end
-      return tv_show
     end
-
-    #
-    # Loads configuration parameters.
-    #
-    def self.load
-      @params = CONFIG_DEFAULTS
-      if File.exists? config_filename 
-        @params.merge! YAML::load_file( config_filename )
-      end
-    end
-    
-    #
-    # Writes configuration parameters, creating config directory and file 
-    # if they do not exist.
-    #
-    def self.save
-      unless File.directory? config_dir
-        system "mkdir -p #{config_dir}"
-      end
-      File.open( config_filename, "w" ) do |f|
-        YAML::dump( @params, f )
-      end
-    end
-    
-    #
-    # Returns a property with the given name.
-    #
-    def self.method_missing( name, *args )
-      if m = /^(.+)=$/.match(name.to_s)
-        # set
-        @params[m[1].to_sym] = args[0]
-      else
-        # get
-        @params[name.to_sym]
-      end
-    end
-    
-    #
-    # Returns full path to config file.
-    #
-    def self.config_filename
-      File.expand_path( CONFIG_FILENAME )
-    end
-
-    #
-    # Returns full path to the directory where config file is located.
-    #
-    def self.config_dir
-      File.dirname( config_filename )
-    end
-    
   end
-
-  Config.load
-  Config.save # creates default config on a fresh installation
-
-end 
+end

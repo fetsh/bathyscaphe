@@ -10,20 +10,23 @@ module Bathyscaphe
 
     attr_accessor :name, :season, :episode
 
-    def initialize filename, filedir
-
+    def initialize(filename, filedir = nil)
+      if filedir.nil?
+        filedir = File.expand_path(File.dirname(filename))
+        filename = File.basename(filename)
+      end
       wholefile = File.join(filedir, filename)
       @name = @season = @episode = nil
 
       if md = filename.match(TVREGEXP1) || md = filename.match(TVREGEXP2) || md = filename.match(TVREGEXP3)
         @name, @season, @episode = get_from_md(md)
       end
-      return unless [@name, @season, @episode].collect(&:blank?).any?
+      return unless [@name, @season, @episode].any?(&:blank?)
 
       if md = wholefile.match(TVREGEXP4) || md = wholefile.match(TVREGEXP5)
         @name, @season, @episode = get_from_md(md)
       end
-      return unless [@name, @season, @episode].collect(&:blank?).any?
+      return unless [@name, @season, @episode].any?(&:blank?)
 
       if md = filedir.split("/").last.match(/(.*)Season(.*)/i)  
         @name = md[1].gsub(/[-.]+/i, ' ').gsub("'", '').strip
@@ -32,14 +35,16 @@ module Bathyscaphe
           @episode = namemd[1].to_i.to_s
         end
       end
-
     end
+
+    private
 
     def get_from_md(md)
       name = md[1].gsub(/[-.]+/i, " ").strip
       name = "Castle" if name =~ /Castle 2009/i
       name = "Missing (2012)" if name =~ /Missing 2012/i
       name = "Brooklyn Nine-Nine" if name =~ /Brooklyn Nine Nine/i
+      name = "Doctor Who" if name =~ /Doctor Who 2005/i
       season = md[2].to_i.to_s
       episode = md[3].to_i.to_s
       return name, season, episode
